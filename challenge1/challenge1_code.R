@@ -1,7 +1,7 @@
 # READ IN INPUT DATA
 input = read.table('challenge1/input_data/input')
 
-# FIND THE TWO ENTRIES THAT SUM TO 2020, THEN MULTIPLY
+# FIND THE two ENTRIES THAT SUM TO 2020, THEN MULTIPLY
 
 # initialize entry sum 
 entry_sum = 0 
@@ -25,3 +25,45 @@ for (i in 1:nrow(input)){
     
   }
 }
+
+
+
+# FIND THE three ENTRIES THAT SUM TO 2020, THEN MULTIPLY
+
+# initialize entry sum 
+entry_sum = 0 
+
+for (i in 1:nrow(input)){
+  # Get the remainder of 2020, the goal sum and the current entry 
+  remainder = 2020-input[i,]
+  
+  # subset matrix to those less than the remainder 
+  new_mat = input[-i,, drop = FALSE] # remove the current row sp it is not included in the new matrix
+  new_mat = input[input < remainder, ,drop = FALSE]
+
+  #  if the new mat has more than 0 rows 
+  if (nrow(new_mat) > 0){
+    # iterate through the new smaller mat, to get the 2 numbers that sum to the
+    # remainder 
+    for (j in 1:nrow(new_mat)){
+      for (k in 1:nrow(new_mat)){
+        
+        # Sum all pairwise row elements, but not the row to itself 
+        if (j != k){
+          entry_sum = new_mat[j,] + new_mat[k,]
+        }
+        
+        # If the sum is 2020, return the product and stop the search 
+        if (entry_sum == remainder){
+          print(new_mat[j,] * new_mat[k,] * input[i,])
+          stop('Found the three entries that sum to 2020!')
+        }
+        
+      }
+    }
+  }
+  
+}
+
+  
+
