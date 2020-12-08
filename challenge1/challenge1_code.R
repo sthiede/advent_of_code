@@ -1,7 +1,7 @@
 # READ IN INPUT DATA
 input = read.table('challenge1/input_data/input')
 
-# FIND THE two ENTRIES THAT SUM TO 2020, THEN MULTIPLY
+# Part 1: FIND THE two ENTRIES THAT SUM TO 2020, THEN MULTIPLY
 
 # initialize entry sum 
 entry_sum = 0 
@@ -28,7 +28,9 @@ for (i in 1:nrow(input)){
 
 
 
-# FIND THE three ENTRIES THAT SUM TO 2020, THEN MULTIPLY
+# Part 2: FIND THE three ENTRIES THAT SUM TO 2020, THEN MULTIPLY
+# Trying out a faster way...not iterating over the length of the input matrix 
+# 3 times. Rather, shortening the input matrix to entries less than 2020-row element
 
 # initialize entry sum 
 entry_sum = 0 
