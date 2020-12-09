@@ -4,6 +4,7 @@
 # jmp = advance specified number of lines
 # nop = advance 1 line 
 
+# Something is broken in the instruction manual, so it's stuck in an infinite loop...
 # Immediately before any instruction is executed a second time, 
 # what value is in the accumulator?
 
@@ -11,6 +12,12 @@
 input = read.table('challenge8/input_data/input')
 
 # RULES AS A FUNCTION 
+# inputs: 
+# 1. command = string "nop", "jmp" or "acc"
+# 2. value = value in the second column, where jmp value tells you how far to jump, 
+# acc value gets added to the accumulator and nop value means nothing
+# 3. accumuator = numeric, numbers getting added to this as we move around
+# 4. index = numeric, update the index based on the rules described above 
 rules <- function(command, value, accumulator, index){
   if (command == "nop"){
     accumulator = accumulator + 0 
@@ -26,6 +33,8 @@ rules <- function(command, value, accumulator, index){
   }
   return(list(index, accumulator))
 }
+
+# Intialize variables 
 # curr_i = current index 
 # hist_i = vector of all indices we've been before 
 # acc = accumulator value 
@@ -33,22 +42,24 @@ curr_i = 1
 hist_i = curr_i
 acc = 0 
 
+# Iterate through until our curr_i appears in our hist_i 
 while (!curr_i %in% hist_i[-length(hist_i)]){ # remove the last curr_i, that is, ignore the curr_i until the next iteration
-  print('start')
-  print(curr_i)
-  print(acc)
+
+  # run function 
   output = rules(input[curr_i,1], input[curr_i, 2], acc, curr_i)
+  
+  # update hist_i
   hist_i = c(hist_i, output[[1]])
-  print('here')
+  
+  # update curr_i 
   curr_i = output[[1]]
+  
+  # update acc 
   acc = output[[2]]
   
-  print(hist_i)
-  print(curr_i)
-  print(acc)
   
 }
-
+# Print the accumulator value when the loop breaks, and that's the answer! 
 print(acc)
 
 # PART 2 GOAL ----: 
