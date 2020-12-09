@@ -52,6 +52,77 @@ while (!curr_i %in% hist_i[-length(hist_i)]){ # remove the last curr_i, that is,
 print(acc)
 
 # PART 2 GOAL ----: 
+# a conversion of one jmp -> nop or nop -> jmp will result in fixing the infinite loop
+# fix the problem and get the accumulator value 
 
+# We know that the problem is one of the numbers in our hist_i, because it results
+# in an infinite loop. Let's see how many jmp's and nop's we have in those
+
+# Get a vector of indices that could be wrong 
+could_be_wrong = hist_i[input[hist_i,1] %in% c('jmp', 'nop')]
+length(could_be_wrong) # number of indices that could be wrong 
+
+# The program ran correctly if there are no duplicated indices in the history of indices
+# does_termindate()
+# input = vector of indices 
+# returns TRUE/FALSE, TRUE if there are no duplicated indices 
+does_terminate <- function(indices){
+  length(indices) == length(unique(indices))
+}
+
+# opposite()
+# input = string "jmp" or "nop" 
+# Return "jmp" if "nop" is inputted and vice versa
+opposite <- function(jmp_or_nop){
+  if (jmp_or_nop == 'jmp'){
+    return('nop')
+  }else if (jmp_or_nop == 'nop'){
+    return('jmp')
+  }else{
+    stop('Expects string of jmp or nop')
+  }
+}
+
+# Loop through each index that could be wrong 
+for (index in could_be_wrong){
+  
+  # Reinitialize values each time
+  curr_i = 1 #  current index 
+  hist_i = curr_i # vector of all indices we've been before 
+  acc = 0 # accumulator value 
+  
+  # Change nop -> jmp or vice versa, one at at time, for each that could be wrong
+  input_fixed = input
+  input_fixed[index,1] = opposite(input_fixed[index,1])
+  
+  while (!curr_i %in% hist_i[-length(hist_i)]){    
+    
+    # if the curr_i is the last row of our commands, exit the while loop 
+    if (curr_i == nrow(input_fixed)){
+      break
+    }
+    
+    # run commands 
+    output = rules(input_fixed[curr_i,1], input_fixed[curr_i, 2], acc, curr_i)
+    
+    # update hist_i
+    hist_i = c(hist_i, output[[1]])
+    
+    # update curr_i 
+    curr_i = output[[1]]
+    
+    # update accumulator 
+    acc = output[[2]]
+    
+    
+  }
+  
+  # Determine if the while loop got to the end of the matrix by checking if 
+  # all the hist_i are unique 
+  if (does_terminate(hist_i)){
+    print(acc)
+    stop('Fixed the broken loop!')
+  }
+}
 
 
